@@ -33,6 +33,9 @@ public class FileStore {
         });
 
         try{
+
+            System.out.println(path + ", " +  fileName);
+
             s3.putObject(path, fileName, inputStream, metadata);
         }catch (AmazonServiceException e){
             throw new IllegalStateException("Failed to store file to s3.", e);
