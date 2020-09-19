@@ -29,10 +29,12 @@ public class UserProfileController {
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
-            path = "{userProfileId}/image/download"
+            path = "{userProfileId}/image/upload"
     )
-    public void uploadUserProfileImage(@PathVariable("userProfileId") UUID userProfileId,
-                                       @RequestParam("file")MultipartFile file){
+    public void uploadUserProfileImage(
+            @PathVariable("userProfileId") UUID userProfileId,
+            @RequestParam("file")MultipartFile file){  //ovo ime "file" mora bit isto kao u
+                                                       //ReactJS u liniji formData.append("file", file");
 
         userProfileService.uploadUserProfileImage(userProfileId, file);
 
