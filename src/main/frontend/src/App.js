@@ -20,10 +20,13 @@ const UserProfiles = () =>{
     fetchUserProfiles();
   }, []);
 
+  
+
   return userProfiles.map((userProfile, index) => {
+    var path = "http://localhost:8080/api/v1/user-profile/" + userProfile.userProfileId + "/image/download"; //ne znam zasto nije radilo kad sam stavio to sve skupa kao "http://localhost:8080/api/v1/user-profile/${userProfileId}/image/upload"
     return (
       <div key={index}>  
-        {/**TODO: profile image */}      
+        {userProfile.userProfileId ? <img src={path}/> : null}      
         <br/>
         <br/>
         <h1>{userProfile.username}</h1>
@@ -45,7 +48,6 @@ function Dropzone({userProfileId}) {
     formData.append("file", file);
 
     var path = "http://localhost:8080/api/v1/user-profile/" + userProfileId + "/image/upload"; //ne znam zasto nije radilo kad sam stavio to sve skupa kao "http://localhost:8080/api/v1/user-profile/${userProfileId}/image/upload"
-    console.log("Path je: " + path);
 
     axios.post(
       path, 

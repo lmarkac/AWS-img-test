@@ -24,8 +24,24 @@
   color: white;
 }
 
+body{
+  margin: 0 auto;
+  margin-top: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(250, 250, 250);
+}
+
 .App-link {
   color: #61dafb;
+}
+
+img{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 @keyframes App-logo-spin {

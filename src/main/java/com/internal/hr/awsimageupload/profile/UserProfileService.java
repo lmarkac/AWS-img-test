@@ -4,6 +4,7 @@ import com.internal.hr.awsimageupload.buckets.BucketName;
 import com.internal.hr.awsimageupload.filestore.FileStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class UserProfileService {
             if(isFileAnImage(file)) {
 
                 //3. check if the user exists in our database
-                UserProfile user = getUser(userProfileId);
+                UserProfile user = getUserProfileOrThrow(userProfileId);
 
                 //4. grab metadata from file if any
                 Map<String, String> metadata = new HashMap<>();
@@ -48,6 +49,7 @@ public class UserProfileService {
 
                 try {
                     fileStore.save(path, fileName, Optional.of(metadata), file.getInputStream());
+                    user.setUserProfileImageLink(fileName);
                 } catch (IOException exception) {
                     throw new IllegalStateException(exception);
                 }
@@ -57,13 +59,22 @@ public class UserProfileService {
         }
     }
 
-    private UserProfile getUser(UUID userProfileId) {
+    private UserProfile getUserProfileOrThrow(UUID userProfileId) {
         return userProfileDataAccessService
                 .getUserProfiles()
                 .stream()
                 .filter(userProfile -> userProfile.getUserProfileId().equals(userProfileId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found.", userProfileId)));
+    }
+
+    public byte[] downloadUserProfileImage(UUID userProfileId){
+        UserProfile user = getUserProfileOrThrow(userProfileId);
+        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), user.getUserProfileId());
+
+        return user.getUserProfileImageLink()
+                .map(key -> fileStore.download(path, key))
+                .orElse(new byte[0]);
     }
 
     private void isFileEmpty(MultipartFile file) {
